@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: quarkus-app-pipeline
-  namespace: quarkus-app
+  namespace: dev-pipeline
   labels:
     app: quarkus
     component: tekton
