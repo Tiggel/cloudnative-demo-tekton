@@ -104,7 +104,7 @@ spec:
         - name: argocd-version
           value: v1.5.2
       runAfter:
-        - push-changes-to-git
+        - build-image
       taskRef:
         kind: Task
         name: argocd-task-sync-and-wait
