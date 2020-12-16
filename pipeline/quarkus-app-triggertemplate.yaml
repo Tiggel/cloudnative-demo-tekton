@@ -35,6 +35,7 @@ spec:
           - name: app-url
             value: $(tt.params.app-url)
           - name: app-revision
+            value: $(tt.params.app-revision)
           - name: manifest-url
             value: $(tt.params.manifest-url)
           - name: manifest-revision
