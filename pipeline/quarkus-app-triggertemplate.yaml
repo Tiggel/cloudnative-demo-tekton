@@ -113,7 +113,7 @@ spec:
             filter: >-
               (header.match('X-GitHub-Event', 'push')) &&
                body.ref.startsWith('refs/heads/master' &&
-               body.repository.name.equals == 'ibm-quarkus')
+               body.repository.name == 'ibm-quarkus')
       bindings:
         - ref: quarkus-tb-app
         - ref: quarkus-tb-deploy
