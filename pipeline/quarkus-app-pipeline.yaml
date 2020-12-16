@@ -1,0 +1,108 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: quarkus-app-pipeline
+  namespace: quarkus-app
+  labels:
+    app: quarkus
+    component: tekton
+spec:
+  params:
+    - name: app-url
+    - name: app-revision
+    - name: manifest-url
+    - name: manifest-revision
+    - name: image
+    - name: deployment_environment
+    - name: path-to-docker-file
+    - name: path-to-yaml
+    - name: path-to-yaml-image
+    - name: git-user
+    - name: git-email
+  workspaces:
+    - name: git-source
+    - name: input
+  tasks:
+    - name: fetch-app-from-git
+      taskRef:
+        name: git-clone
+      params:
+        - name: app-url
+          value: $(params.app-url)
+        - name: app-revision
+          value: $(params.app-revision)
+      workspaces:
+        - name: output
+          workspace: git-source
+    - name: fetch-deployment-manifests-from-git
+      taskRef:
+        name: git-clone
+      params:
+        - name: manifest-url
+          value: $(params.manifest-url)
+        - name: manifest-revision
+          value: $(params.manifest-revision)
+      workspaces:
+        - name: output
+          workspace: git-source
+    - name: build-image
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: $(params.image)
+        - name: DOCKERFILE
+          value: $(params.path-to-docker-file)
+      workspaces:
+        - name: source
+          workspace: git-source
+      runAfter:
+        - fetch-from-git
+    - name: replace-image
+      taskRef:
+        name: update-image-in-yaml
+      params:
+        - name: path
+          value: $(params.path-to-yaml)
+        - name: yamlPathToImage
+          value: $(params.path-to-yaml-image)
+        - name: image
+          value: $(params.image)
+      workspaces:
+        - name: source
+          workspace: git-source
+      runAfter:
+        - build-image
+    - name: push-changes-to-git
+      taskRef:
+        name: git-cli
+      workspaces:
+        - name: source
+          workspace: git-source
+        - name: input
+          workspace: input
+      params:
+        - name: GIT_USER_NAME
+          value: $(params.git-user)
+        - name: GIT_USER_EMAIL
+          value: $(params.git-email)
+        - name: GIT_SCRIPT
+          value: |
+            git add deployment/node-web-app-deployment.yaml
+            git commit -m 'Update deployment image'
+            git push origin HEAD:master
+      runAfter:
+        - replace-image
+    - name: argocd-sync-deployment
+      params:
+        - name: application-name
+          value: $(params.deployment_environment)
+        - name: flags
+          value: '--insecure'
+        - name: argocd-version
+          value: v1.5.2
+      runAfter:
+        - push-changes-to-git
+      taskRef:
+        kind: Task
+        name: argocd-task-sync-and-wait

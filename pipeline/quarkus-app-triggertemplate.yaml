@@ -1,0 +1,117 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: quarkus-tt
+spec:
+  params:
+    - name: deployment_environment
+      description: argocd app
+    - name: app-url
+      description: git url
+    - name: app-revision
+      description: git revision
+    - name: commit
+      description: git commit
+    - name: image
+    - name: path-to-docker-file
+    - name: manifest-url
+    - name: manifest-revision
+    - name: path-to-yaml
+    - name: path-to-yaml-image
+    - name: git-user
+    - name: git-email
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: quarkus-app-pipeline-run-
+        namespace: quarkus-app
+      spec:
+        pipelineRef:
+          name: quarkus-app-pipeline
+        params:
+          - name: deployment_environment
+            value: $(tt.params.deployment_environment)
+          - name: app-url
+            value: $(tt.params.app-url)
+          - name: app-revision
+          - name: manifest-url
+            value: $(tt.params.app-url)
+          - name: manifest-revision
+            value: $(tt.params.app-revision)
+          - name: image
+            value: $(tt.params.image)
+          - name: path-to-docker-file
+            value: $(tt.params.path-to-docker-file)
+          - name: path-to-yaml
+            value: $(tt.params.path-to-yaml)
+          - name: path-to-yaml-image
+            value: $(tt.params.path-to-yaml-image)
+          - name: git-user
+            value: $(tt.params.git-user)
+          - name: git-email
+            value: $(tt.params.git-email)
+        workspaces:
+          - name: git-source # this workspace name must be declared in the Pipeline
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce # access mode may affect how you can use this volume in parallel tasks
+                resources:
+                  requests:
+                    storage: 1Gi
+          - name: input
+            emptyDir: {}
+        #serviceAccountName: pipeline
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: quarkus-tb-app
+spec:
+  params:
+    - name: app-url
+      value: https://github.com/Tiggel/ibm-quarkus.git
+    - name: app-revision
+      value: master
+    - name: deployment_environment
+      value: dev
+    - name: image
+      value: tiggel/ibm-quarkus-demo:$(body.head_commit.id)
+    - name: path-to-docker-file
+      value: /workspace/source/Dockerfile
+    - name: git-user
+      value: Tiggel
+    - name: git-email
+      value: sebastian.tiggelkamp@gmail.com
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: quarkus-tb-deploy
+spec:
+  params:
+    - name: path-to-yaml
+      value: /workspace/source/deployment/quarkus-app-deployment.yaml
+    - name: path-to-yaml-image
+      value: spec.template.spec.containers[0].image
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: node-web-app-el
+spec:
+  #serviceAccountName: pipeline
+  triggers:
+    - name: trigger-argo
+      interceptors:
+        - cel:
+            filter: >-
+              (header.match('X-GitHub-Event', 'push')) &&
+               body.ref.startsWith('refs/heads/master')
+      bindings:
+        - ref: quarkus-tb-app
+        - ref: quarkus-tb-deploy
+      template:
+        name: quarkus-tt
+  serviceType: LoadBalancer
