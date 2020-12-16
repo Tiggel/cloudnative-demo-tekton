@@ -36,9 +36,9 @@ spec:
             value: $(tt.params.app-url)
           - name: app-revision
           - name: manifest-url
-            value: $(tt.params.app-url)
+            value: $(tt.params.manifest-url)
           - name: manifest-revision
-            value: $(tt.params.app-revision)
+            value: $(tt.params.manifest-revision)
           - name: image
             value: $(tt.params.image)
           - name: path-to-docker-file
@@ -91,6 +91,10 @@ metadata:
   name: quarkus-tb-deploy
 spec:
   params:
+    - name: manifest-url
+      value: https://github.com/Tiggel/ibm-quarkus.git
+    - name: manifest-revision
+      value: master
     - name: path-to-yaml
       value: /workspace/source/deployment/quarkus-app-deployment.yaml
     - name: path-to-yaml-image
@@ -108,7 +112,8 @@ spec:
         - cel:
             filter: >-
               (header.match('X-GitHub-Event', 'push')) &&
-               body.ref.startsWith('refs/heads/master')
+               body.ref.startsWith('refs/heads/master' &&
+               body.repository.name.equals('cloudnative-demo-tekton'))
       bindings:
         - ref: quarkus-tb-app
         - ref: quarkus-tb-deploy
