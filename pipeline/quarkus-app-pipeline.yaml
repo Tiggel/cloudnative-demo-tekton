@@ -34,17 +34,6 @@ spec:
       workspaces:
         - name: output
           workspace: git-source
-    - name: fetch-deployment-manifests-from-git
-      taskRef:
-        name: git-clone
-      params:
-        - name: manifest-url
-          value: $(params.manifest-url)
-        - name: manifest-revision
-          value: $(params.manifest-revision)
-      workspaces:
-        - name: output
-          workspace: git-source
     - name: build-image
       taskRef:
         name: kaniko
@@ -57,7 +46,20 @@ spec:
         - name: source
           workspace: git-source
       runAfter:
-        - fetch-from-git
+        - fetch-app-from-git
+    - name: fetch-deployment-manifests-from-git
+      taskRef:
+        name: git-clone
+      params:
+        - name: manifest-url
+          value: $(params.manifest-url)
+        - name: manifest-revision
+          value: $(params.manifest-revision)
+      workspaces:
+        - name: output
+          workspace: git-source
+      runAfter:
+        - build-image
     - name: replace-image
       taskRef:
         name: update-image-in-yaml
@@ -72,7 +74,7 @@ spec:
         - name: source
           workspace: git-source
       runAfter:
-        - build-image
+        - fetch-deployment-manifests-from-git
     - name: push-changes-to-git
       taskRef:
         name: git-cli

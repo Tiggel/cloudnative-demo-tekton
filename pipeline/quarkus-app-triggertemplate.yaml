@@ -99,7 +99,7 @@ spec:
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: node-web-app-el
+  name: quarkus-app-el
 spec:
   #serviceAccountName: pipeline
   triggers:
