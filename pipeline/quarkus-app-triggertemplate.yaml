@@ -111,7 +111,7 @@ spec:
                body.ref.startsWith('refs/heads/master')
       bindings:
         - ref: quarkus-tb-app
-        #- ref: quarkus-tb-deploy
+        - ref: quarkus-tb-deploy
       template:
         name: quarkus-tt
   serviceType: LoadBalancer
