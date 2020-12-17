@@ -4,7 +4,7 @@ metadata:
   name: update-image-in-yaml
 spec:
   workspaces:
-    - name: git-source-deployment
+    - name: source
       description: A workspace that contains the fetched git repository.
   params:
     - name: path
