@@ -86,7 +86,7 @@ spec:
     - name: deployment_environment
       value: dev
     - name: image
-      value: tiggel/ibm-quarkus-demo:f3074176fa8cc013c933f6c82b5a4f2a666ccd70
+      value: tiggel/ibm-quarkus-demo:$(body.head_commit.id)
     - name: path-to-docker-file
       value: /workspace/source/Dockerfile
     - name: git-user
@@ -105,7 +105,7 @@ spec:
     - name: manifest-revision
       value: master
     - name: path-to-yaml
-      value: /workspace/source/deployment/quarkus-app-deployment.yaml
+      value: /workspace/source-deployment/deployment/quarkus-app-deployment.yaml
     - name: path-to-yaml-image
       value: spec.template.spec.containers[0].image
 ---
