@@ -61,6 +61,14 @@ spec:
                 resources:
                   requests:
                     storage: 1Gi
+          - name: git-source-deployment
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
           - name: input
             emptyDir: {}
         #serviceAccountName: pipeline
@@ -97,7 +105,7 @@ spec:
     - name: manifest-revision
       value: master
     - name: path-to-yaml
-      value: /workspace/source/deployment/quarkus-app-deployment.yaml
+      value: /workspace/source-deployment/deployment/quarkus-app-deployment.yaml
     - name: path-to-yaml-image
       value: spec.template.spec.containers[0].image
 ---

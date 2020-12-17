@@ -21,15 +21,16 @@ spec:
     - name: git-email
   workspaces:
     - name: git-source
+    - name: git-source-deployment
     - name: input
   tasks:
     - name: fetch-app-from-git
       taskRef:
         name: git-clone
       params:
-        - name: app-url
+        - name: url
           value: $(params.app-url)
-        - name: app-revision
+        - name: revision
           value: $(params.app-revision)
       workspaces:
         - name: output
@@ -47,54 +48,54 @@ spec:
           workspace: git-source
       runAfter:
         - fetch-app-from-git
-#    - name: fetch-deployment-manifests-from-git
-#      taskRef:
-#        name: git-clone
-#      params:
-#        - name: url
-#          value: $(params.manifest-url)
-#        - name: revision
-#          value: $(params.manifest-revision)
-#      workspaces:
-#        - name: output
-#          workspace: git-source
-#      runAfter:
-#        - build-image
-#    - name: replace-image
-#      taskRef:
-#        name: update-image-in-yaml
-#      params:
-#        - name: path
-#          value: $(params.path-to-yaml)
-#        - name: yamlPathToImage
-#          value: $(params.path-to-yaml-image)
-#        - name: image
-#          value: $(params.image)
-#      workspaces:
-#        - name: source
-#          workspace: git-source
-#      runAfter:
-#        - fetch-deployment-manifests-from-git
-#    - name: push-changes-to-git
-#      taskRef:
-#        name: git-cli
-#      workspaces:
-#        - name: source
-#          workspace: git-source
-#        - name: input
-#          workspace: input
-#      params:
-#        - name: GIT_USER_NAME
-#          value: $(params.git-user)
-#        - name: GIT_USER_EMAIL
-#          value: $(params.git-email)
-#        - name: GIT_SCRIPT
-#          value: |
-#            git add deployment/quarkus-app-deployment.yaml
-#            git commit -m 'Update deployment image'
-#            git push origin HEAD:master
-#      runAfter:
-#        - replace-image
+    - name: fetch-deployment-manifests-from-git
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.manifest-url)
+        - name: revision
+          value: $(params.manifest-revision)
+      workspaces:
+        - name: output-deployment
+          workspace: git-source-deployment
+      runAfter:
+        - build-image
+    - name: replace-image
+      taskRef:
+        name: update-image-in-yaml
+      params:
+        - name: path
+          value: $(params.path-to-yaml)
+        - name: yamlPathToImage
+          value: $(params.path-to-yaml-image)
+        - name: image
+          value: $(params.image)
+      workspaces:
+        - name: source-deployment
+          workspace: git-source-deployment
+      runAfter:
+        - fetch-deployment-manifests-from-git
+    - name: push-changes-to-git
+      taskRef:
+        name: git-cli
+      workspaces:
+        - name: source-deployment
+          workspace: git-source-deployment
+        - name: input
+          workspace: input
+      params:
+        - name: GIT_USER_NAME
+          value: $(params.git-user)
+        - name: GIT_USER_EMAIL
+          value: $(params.git-email)
+        - name: GIT_SCRIPT
+          value: |
+            git add deployment/quarkus-app-deployment.yaml
+            git commit -m 'Update deployment image'
+            git push origin HEAD:master
+      runAfter:
+        - replace-image
     - name: argocd-sync-deployment
       params:
         - name: application-name
