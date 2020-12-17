@@ -46,19 +46,19 @@ spec:
       workspaces:
         - name: output
           workspace: git-source-deployment
-#    - name: build-image
-#      taskRef:
-#        name: kaniko
-#      params:
-#        - name: IMAGE
-#          value: $(params.image)
-#        - name: DOCKERFILE
-#          value: $(params.path-to-docker-file)
-#      workspaces:
-#        - name: source
-#          workspace: git-source
-#      runAfter:
-#        - fetch-app-from-git
+    - name: build-image
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: $(params.image)
+        - name: DOCKERFILE
+          value: $(params.path-to-docker-file)
+      workspaces:
+        - name: source
+          workspace: git-source
+      runAfter:
+        - fetch-app-from-git
     - name: replace-image
       taskRef:
         name: update-image-in-yaml
@@ -73,7 +73,7 @@ spec:
         - name: source
           workspace: git-source-deployment
       runAfter:
-        - fetch-deployment-manifests-from-git
+        - build-image
     - name: push-changes-to-git
       taskRef:
         name: git-cli
