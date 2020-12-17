@@ -35,19 +35,19 @@ spec:
       workspaces:
         - name: output
           workspace: git-source
-    - name: build-image
-      taskRef:
-        name: kaniko
-      params:
-        - name: IMAGE
-          value: $(params.image)
-        - name: DOCKERFILE
-          value: $(params.path-to-docker-file)
-      workspaces:
-        - name: source
-          workspace: git-source
-      runAfter:
-        - fetch-app-from-git
+#    - name: build-image
+#      taskRef:
+#        name: kaniko
+#      params:
+#        - name: IMAGE
+#          value: $(params.image)
+#        - name: DOCKERFILE
+#          value: $(params.path-to-docker-file)
+#      workspaces:
+#        - name: source
+#          workspace: git-source
+#      runAfter:
+#        - fetch-app-from-git
     - name: fetch-deployment-manifests-from-git
       taskRef:
         name: git-clone
@@ -57,7 +57,7 @@ spec:
         - name: revision
           value: $(params.manifest-revision)
       workspaces:
-        - name: output-deployment
+        - name: source-deployment
           workspace: git-source-deployment
       runAfter:
         - build-image
