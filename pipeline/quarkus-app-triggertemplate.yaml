@@ -114,7 +114,7 @@ kind: EventListener
 metadata:
   name: quarkus-app-el
 spec:
-  #serviceAccountName: pipeline
+  serviceAccountName: pipeline
   triggers:
     - name: trigger-argo
       interceptors:
@@ -128,7 +128,7 @@ spec:
       template:
         name: quarkus-tt
   serviceType: LoadBalancer
-
+---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
