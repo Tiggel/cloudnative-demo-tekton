@@ -12,7 +12,7 @@ subjects:
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tekton-triggers-aggregate-edit
   apiGroup: ""
 ---
@@ -29,7 +29,7 @@ subjects:
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tekton-clustertasks-view
   apiGroup: ""
 ---
@@ -46,7 +46,7 @@ subjects:
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tekton-aggregate-edit
   apiGroup: ""
 ---
@@ -63,7 +63,7 @@ subjects:
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tekton-pipelines-admin
   apiGroup: ""
 ---
@@ -80,7 +80,7 @@ subjects:
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tekton-aggregate-edit
   apiGroup: ""
 ---
@@ -96,6 +96,6 @@ subjects:
     name: argocd-application-controller
     apiGroup: ""
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: edit
   apiGroup: ""
