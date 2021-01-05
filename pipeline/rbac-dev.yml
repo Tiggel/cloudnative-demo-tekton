@@ -1,0 +1,90 @@
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-tekton-trigger
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: tekton-triggers-aggregate-edit
+  apiGroup: ""
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-tekton-cluster-task
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: tekton-clustertasks-view
+  apiGroup: ""
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-tekton-aggregate
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: tekton-aggregate-edit
+  apiGroup: ""
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-tekton-pipelines
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: tekton-pipelines-admin
+  apiGroup: ""
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-tekton-aggregate-server
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-server
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: tekton-aggregate-edit
+  apiGroup: ""
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-edit
+  namespace: dev-pipeline
+subjects:
+  - kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: edit
+  apiGroup: ""
