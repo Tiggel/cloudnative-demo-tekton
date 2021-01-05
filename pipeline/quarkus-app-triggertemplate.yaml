@@ -128,3 +128,14 @@ spec:
       template:
         name: quarkus-tt
   serviceType: LoadBalancer
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: el-quarkus-app
+  namespace: node-web-project
+spec:
+  to:
+    kind: Service
+    name: el-quarkus-app-el
+    weight: 100
