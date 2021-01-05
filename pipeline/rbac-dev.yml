@@ -4,13 +4,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-tekton-trigger
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-application-controller
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tekton-triggers-aggregate-edit
   apiGroup: ""
 ---
@@ -19,13 +21,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-tekton-cluster-task
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-application-controller
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tekton-clustertasks-view
   apiGroup: ""
 ---
@@ -34,13 +38,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-tekton-aggregate
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-application-controller
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tekton-aggregate-edit
   apiGroup: ""
 ---
@@ -49,13 +55,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-tekton-pipelines
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-application-controller
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tekton-pipelines-admin
   apiGroup: ""
 ---
@@ -64,13 +72,15 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-tekton-aggregate-server
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-server
     namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tekton-aggregate-edit
   apiGroup: ""
 ---
@@ -79,12 +89,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: argocd-edit
   namespace: dev-pipeline
+  labels:
+    app.kubernetes.io/instance: dev-pipeline
 subjects:
   - kind: ServiceAccount
     name: argocd-application-controller
-    namespace: argocd
     apiGroup: ""
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: edit
   apiGroup: ""
