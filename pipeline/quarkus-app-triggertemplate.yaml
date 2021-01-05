@@ -133,7 +133,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: el-quarkus-app
-  namespace: node-web-project
+  namespace: dev-pipeline
 spec:
   to:
     kind: Service
