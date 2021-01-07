@@ -127,7 +127,6 @@ spec:
         - ref: quarkus-tb-deploy
       template:
         name: quarkus-tt
-  serviceType: LoadBalancer
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
