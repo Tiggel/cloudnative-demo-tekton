@@ -107,7 +107,7 @@ spec:
     - name: path-to-yaml
       value: /workspace/source/deployment/quarkus-app-deployment.yaml
     - name: path-to-yaml-image
-      value: spec.template.spec.containers[0].image
+      value: .spec.template.spec.containers[0].image
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
