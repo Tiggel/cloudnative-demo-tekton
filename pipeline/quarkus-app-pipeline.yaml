@@ -27,6 +27,7 @@ spec:
     - name: fetch-app-from-git
       taskRef:
         name: git-clone
+        kind: ClusterTask
       params:
         - name: url
           value: $(params.app-url)
