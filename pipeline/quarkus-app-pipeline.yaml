@@ -97,16 +97,3 @@ spec:
             git push origin HEAD:master
       runAfter:
         - replace-image
-    - name: argocd-sync-deployment
-      params:
-        - name: application-name
-          value: $(params.deployment_environment)
-        - name: flags
-          value: '--insecure'
-        - name: argocd-version
-          value: v1.5.2
-      runAfter:
-        - push-changes-to-git
-      taskRef:
-        kind: Task
-        name: argocd-task-sync-and-wait
