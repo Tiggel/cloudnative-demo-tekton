@@ -83,8 +83,6 @@ spec:
       value: https://github.com/Tiggel/ibm-quarkus.git
     - name: app-revision
       value: master
-    - name: deployment_environment
-      value: dev
     - name: image
       value: tiggel/ibm-quarkus-demo:$(body.head_commit.id)
     - name: path-to-docker-file

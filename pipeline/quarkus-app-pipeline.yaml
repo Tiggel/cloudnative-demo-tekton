@@ -8,7 +8,6 @@ metadata:
     component: tekton
 spec:
   params:
-    - name: deployment_environment
     - name: app-url
     - name: app-revision
     - name: manifest-url
